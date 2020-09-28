@@ -21,11 +21,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-    const templateVars = { shortURL: req.params.shortURL, longURL: /* What goes here? */ };
+    const templateVars = { shortURL: req.params.shortURL, longURL: generateRandomString(16) };
     res.render("urls_show", templateVars);
   });
 
-
+  app.get("/urls/new", (req, res) => {
+    res.render("urls_new");
+  });
+  
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
@@ -49,3 +52,19 @@ app.get("/urls.json", (req, res) => {
    app.get("/fetch", (req, res) => {
     res.send(`a = ${a}`);
    });
+
+   app.post("/urls", (req, res) => {
+    console.log(req.body);  // Log the POST request body to the console
+    res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  });
+  
+  function generateRandomString(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
+ 
