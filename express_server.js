@@ -11,6 +11,21 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.get('/urlDatabase/:id', (req,res) => {
+  console.log("URLS  SHOW route")
+  //console.log(req.body);
+  //console.log(req.query);
+  // console.log(req.params);
+  // console.log(req.params.id)
+  // console.log(memes);
+  const template_vars = {
+      url: urlDatabase[req.params.id]
+  }
+  res.render('urls_show', template_vars)
+});
+
+
+
 app.get("/urls", (req, res) => {
     const templateVars = { urls: urlDatabase };
     res.render("urls_index", templateVars);
