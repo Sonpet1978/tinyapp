@@ -10,5 +10,21 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         </div>
       </div>
+ 
+      <% if (!username){ %>
+        <form class="form-user" action="/login" method="POST" style="margin-left: 40%; margin-top: 0px;" >
+          <div class="form-group mb-2" style="display: flex;">
+            <input class="form-control" type="text" name="username" placeholder="Username" style="width: 200px; margin-top: 0px; margin-bottom: 20px">
+            <button type="submit" class="btn btn-primary" style="background-color: rgb(165, 219, 14); margin-left: 5px; width: 100px; height: 40px; margin-top: 0px; text-transform: uppercase; color: rgb(236, 98, 5); border: none; font-size: 14px;">sign in</button>
+          </div>
+        </form>
+      <% } else {%>
+        <p style="color: rgb(5, 51, 5); margin-right: 10px; margin-top: 5px;">You are logged as <%= username %></p>
+        <form method="POST" action="/logout" style="display: inline-block;">
+          <input class="pure-button pure-button-primary" type="submit" value="Log Out" style="background-color: rgb(14, 163, 46); margin-left: 5px; width: 100px; height: 40px; margin-top: 0px; text-transform: uppercase; color: rgb(245, 241, 239); border: solid rgb(165, 219, 14) 1px; font-size: 14px;">
+        </form>
+      <% }%>
+
+
     </nav>
   </header>

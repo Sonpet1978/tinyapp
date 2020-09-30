@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -36,6 +37,8 @@ app.get("/urls", (req, res) => {
     res.redirect(`/urls/${shortURL}`);
 
   });
+
+  
 
   app.get("/urls/new", (req, res) => {
     res.render("urls_new");
