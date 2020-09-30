@@ -6,6 +6,10 @@ const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: true }));
+const cookieParser = require('cookie-parser')
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
@@ -23,7 +27,7 @@ app.get("/urls.json", (req, res) => {
 });
 
 
-app.get("/urls", (req, res) => {
+/*app.get("/urls", (req, res) => {
     const templateVars = { urls: urlDatabase };
     res.render("urls_index", templateVars);
   });
@@ -42,8 +46,51 @@ app.get("/urls", (req, res) => {
 
   app.get("/urls/new", (req, res) => {
     res.render("urls_new");
+});*/
+
+
+app.get("/urls", (req, res) => {
+  // for (let key in urlDatabase) {
+  //     let userID = urlDatabase[key].userID
+  //     if (req.session.user_id === userID) {
+  //       myUrls[key] = urlDatabase[key];
+      
+  // const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase,
+      username: req.cookies.userId };
+  res.render("urls_index", templateVars);
 });
 
+app.post("/urls", (req, res) => {
+  console.log('posted')
+  // console.log(req.body);  // Log the POST request body to the console
+  // res.send("Ok");
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
+  // res.redirect('/urls');
+  
+  // Respond with 'Ok' (we will replace this)
+});
+
+app.get("/urls/new", (req, res) => {
+  const templateVars = { username: req.cookies.userId,
+      username: req.cookies.userId  };
+  res.render("urls_new", templateVars);
+});
+
+
+
+app.post('/login', (req, res) => {
+  const userId = req.body.username;
+  res.cookie('userId', userId); // set the cookie's key and value
+  res.redirect('/urls');
+});
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('userId');
+  res.redirect('/urls');
+});
 
 app.get("/urls/:shortURL", (req, res) => {
     const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };

@@ -8,9 +8,9 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+       
         </div>
       </div>
- 
       <% if (!username){ %>
         <form class="form-user" action="/login" method="POST" style="margin-left: 40%; margin-top: 0px;" >
           <div class="form-group mb-2" style="display: flex;">
@@ -24,7 +24,6 @@
           <input class="pure-button pure-button-primary" type="submit" value="Log Out" style="background-color: rgb(14, 163, 46); margin-left: 5px; width: 100px; height: 40px; margin-top: 0px; text-transform: uppercase; color: rgb(245, 241, 239); border: solid rgb(165, 219, 14) 1px; font-size: 14px;">
         </form>
       <% }%>
-
-
     </nav>
+
   </header>
