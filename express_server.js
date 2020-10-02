@@ -49,6 +49,11 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const urlDatabase2 = {
+  b6UTxQ: {longURL: "https://www.tsn.ca", userID: "userRandomID" },
+  i3BoGr: {longURL: "https://www.google.ca", userID: "user2RandomID" }
+};
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
