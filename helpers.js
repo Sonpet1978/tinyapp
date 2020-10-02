@@ -1,4 +1,4 @@
-const validateUser = (bcrypt, db, email, password) => {
+const validateUser = function (bcrypt, db, email, password) {
     for (const nicename in db) {
       const currentUser = db[nicename]
       if (currentUser.email === email) {
@@ -17,7 +17,17 @@ const validateUser = (bcrypt, db, email, password) => {
     return null
   }
   
-  const checkEmail = (db, email) => {
+  const isUsersLink = function (object, id) {
+    let usersObject = {};
+    for (let key in object) {
+      if (object[key].userID === id) {
+        usersObject[key] = object[key];
+      }
+    }
+    return usersObject;
+  };
+
+  const checkEmail = function (db, email)  {
     for (const nicename in db) {
       const currentUser = db[nicename]
       if (currentUser.email === email) {
@@ -27,4 +37,4 @@ const validateUser = (bcrypt, db, email, password) => {
     }
     return null
   }
-  module.exports = { validateUser, checkEmail }
+  module.exports = { validateUser, checkEmail , isUsersLink }
