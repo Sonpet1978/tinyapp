@@ -71,32 +71,34 @@ app.get("/urls.json", (req, res) => {
 //*******************GET POST URLS */
 app.get("/urls", (req, res) => {
   const id = req.session.id;
-  const user = id ? users[id] : null; // check if the cookie already exists with a legit id 
+  const user = id ? users[id] : null;                     // check if the cookie already exists with a legit id 
   if (user) {
-    let templateVars = { "urls": isUsersLink(urlDatabase2, id), username: req.session.email };
+    let templateVars = { "urls": isUsersLink(urlDatabase2, id), username: req.session.email }; //constructs the list of urls and user email for the header
     res.render("urls_index", templateVars);
   } else {
       res.render("login");
   }
+
 });
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase2[shortURL] = {};
-  urlDatabase2[shortURL].longURL = req.body.longURL;
-  urlDatabase2[shortURL].userID = req.session.id;
-  res.redirect(`/urls/${shortURL}`);
-});
+   urlDatabase2[shortURL] = {};
+   urlDatabase2[shortURL].longURL = req.body.longURL;      //generating a new url object
+   urlDatabase2[shortURL].userID = req.session.id;
+   res.redirect(`/urls/${shortURL}`);
+ });
+
 
 
 //*****************************S */
 app.get("/urls/new", (req, res) => {
   if(req.session.id){
-    const templateVars = { 
+    const templateVars = {                                //if the user logged generating a new form
     username: req.session.email };
     res.render("urls_new", templateVars);
 } else{
-   res.render("login");
+   res.render("login");                                  //if the user is not logged send him/her to the login page
 }
 });
 
@@ -105,31 +107,38 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: "www.google.com",
-    username: req.session.email };
-res.render("urls_show", templateVars);
+  if(urlDatabase2[req.params.shortURL].userID === req.session.id){   //if the user is logged in
+    const templateVars = { shortURL: req.params.shortURL, 
+        longURL: urlDatabase2[req.params.shortURL].longURL,    //generte the url object to display
+        username: req.session.email };
+    res.render("urls_show", templateVars);
+} else {
+    res.render("login");                                        //send the user to log in page if not logged in
+  
+}
+
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  if(urlDatabase2.userID === req.session.id){
-    urlDatabase2.longURL = req.body.longURL;
+  if(urlDatabase2[req.params.shortURL].userID === req.session.id){         //checking if the url belongs to the user
+    urlDatabase2[req.params.shortURL].longURL = req.body.longURL;        //assigning a new longURL to the short
     res.redirect('/urls');
 } else {
-    res.render("login");
+    res.render("login");                                                 //send the user to log in page if not logged in
 }
+  
   
 });
 
 ///*******************DELETE URL */
 
 app.post('/urls/:shortURL/delete', (req, res) => {
-  if(urlDatabase2[req.params.shortURL].userID === req.session.id){
-      delete urlDatabase2[req.params.shortURL];
-      res.redirect('/urls');
-  } else {
-      res.render("login");
-  }
-
+  if(urlDatabase2[req.params.shortURL].userID === req.session.id){        //checking if the url belongs to the user
+    delete urlDatabase2[req.params.shortURL];                      //delete the url from the db
+    res.redirect('/urls');
+} else {
+    res.render("login");                                            //send to login page if not logged in
+}
 });
 
 
