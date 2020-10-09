@@ -152,11 +152,13 @@ app.post("/login", (req, res) => {
   console.log(req.body)
   const userObject = validateUser(bcrypt, users, req.body.email, req.body.password)
   if (userObject) {
-    req.session.id = userObject.id
-    res.redirect('/')
+    const id = matchKey(users, email);
+        req.session.email = email;                               //set cookie session
+        req.session.id = id;
+        res.redirect('/urls');
   } else {
     console.log('Failed login attempt')
-    res.render('login', { error: "Failed login attempt" })
+    res.redirect('/register');    
   }
 })
  
@@ -174,22 +176,30 @@ app.get("/register", (req, res) => {
 
 
 app.post('/register', (req, res) => {
- const { id , email , password} = req.body
-
- if (checkEmail(users, email)) {
-  res.send('EMAIL ALREADY IN USE')
-} else {
-  const newUser = {
-    id,
-    email,
-    password: bcrypt.hashSync(password, salt)
+  const id = generateRandomString(6);                                   //function is in the helpers.js file 
+  const email = req.body.email;
+  const prePassword = req.body.password;
+  const password = bcrypt.hashSync(prePassword, salt);
+  if(getUserByEmail(email, users)){                                      //checks if the user is already registered (function is in the helpers.js file)
+      res.render('login');  
+  } else {
+      if (checkEmail(users, email, password)) {                            //check that fields are not empty
+          res.send('404');
+        } else {
+          const newUser = {                                                //add the user to the user db
+              id,
+              email,
+              password
+          };
+          users[id] = newUser;
+          req.session.email = email;                                       //set cookie session
+          req.session.id = id;
+          res.redirect('/urls');
+        }
   }
-  users[id] = newUser
-  req.session.id = id
-  res.redirect('/login')
-}
-
+ 
 });
+
 
 //************************************ */
 
@@ -214,6 +224,13 @@ const checkValidEmail = (db, email) => {
   return null
 }
 
+
+const matchKey = function(obj, key){                         //function filteres the users db to find the corresponding id to the entered email
+  for (let item in obj){
+      if(users[item].email === key)
+      return users[item].id;
+  }
+};
 
 const validateCurrentUser = (bcrypt, db, email, password) => {
   for (const nicename in db) {

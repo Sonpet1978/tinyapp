@@ -27,6 +27,15 @@ const validateUser = function (bcrypt, db, email, password) {
     return usersObject;
   };
 
+  const getUserByEmail = function(email, db) { //checks if the entered email corresponds with the data base
+    for (const id in db) {
+      const currentUser = db[id];
+    if(currentUser.email === email){
+      return true;
+    }
+    return false;
+  }
+  };
   const checkEmail = function (db, email)  {
     for (const nicename in db) {
       const currentUser = db[nicename]
@@ -37,4 +46,4 @@ const validateUser = function (bcrypt, db, email, password) {
     }
     return null
   }
-  module.exports = { validateUser, checkEmail , isUsersLink }
+  module.exports = { validateUser, checkEmail , isUsersLink ,getUserByEmail}
