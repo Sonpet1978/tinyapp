@@ -1,31 +1,10 @@
-const validateUser = function (bcrypt, db, email, password) {
-    for (const nicename in db) {
-      const currentUser = db[nicename]
-      if (currentUser.email === email) {
-        console.log('email matching')
-        if (bcrypt.compareSync(password, currentUser.password)) {
-          console.log('password matching')
-  
-          return currentUser
-        } else {
-          return null
-        }
-      } else {
-        console.log('email not matching')
+const checkEmail = (email, password ) => { //checks if the fields"password" & " email" are empty
+      if (email === "" || password === "") {
+        return true;
       }
-    }
-    return null
-  }
-  
-  const isUsersLink = function (object, id) {
-    let usersObject = {};
-    for (let key in object) {
-      if (object[key].userID === id) {
-        usersObject[key] = object[key];
-      }
-    }
-    return usersObject;
+    return false;
   };
+
 
   const getUserByEmail = function(email, db) { //checks if the entered email corresponds with the data base
     for (const id in db) {
@@ -36,14 +15,41 @@ const validateUser = function (bcrypt, db, email, password) {
     return false;
   }
   };
-  const checkEmail = function (db, email)  {
-    for (const nicename in db) {
-      const currentUser = db[nicename]
-      if (currentUser.email === email) {
-        console.log('email matching')
-        return true
-      }
+
+
+ 
+  
+const validateUser = (bcrypt, db, email, password ) => {   //checks if the entered password matches with the data base
+  for (const id in db) {
+    const currentUser = db[id];
+    if (email === currentUser.email){
+      if (bcrypt.compareSync(password, currentUser.password)) {
+        return true;
+      } else {
+        return false;
+      } 
     }
-    return null
   }
-  module.exports = { validateUser, checkEmail , isUsersLink ,getUserByEmail}
+   return false;
+};
+  
+
+
+const isUsersLink = function (object, id) { // filters the url db and constructs the list of urls for the user
+  let usersObject = {};
+  for (let key in object) {
+    if (object[key].userID === id) {
+      usersObject[key] = object[key];
+    }
+  }
+  return usersObject;
+};
+
+const generateRandomString = function () { // generates a random string
+    let newURL = "";
+    newURL = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 6);
+    return newURL;
+}
+
+
+  module.exports = { checkEmail, validateUser, isUsersLink, getUserByEmail, generateRandomString  }
