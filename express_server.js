@@ -39,7 +39,14 @@ const users = {
   
 
 app.get("/", (req, res) => {
-    res.send("Hello!");
+  const id = req.session.id;
+  const user = id ? users[id] : null;                     // check if the cookie already exists with a legit id 
+  if (user) {
+    res.render("urls");
+  } else {
+      res.render("login");
+  }
+
 });
 
 app.get("/urls.json", (req, res) => {
